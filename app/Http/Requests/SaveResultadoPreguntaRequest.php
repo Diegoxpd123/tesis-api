@@ -29,10 +29,12 @@ class SaveResultadoPreguntaRequest extends FormRequest
         'institucionid' => 'required|integer',
         'respuesta'     => 'required|string',
         'tiempo'        => 'required|integer',
+        'tiemporeforzamiento'        => 'required|integer',
         'created_at'    => 'required|string',
         'updated_at'    => 'required|string',
         'is_deleted'    => 'required|integer',
         'is_actived'    => 'required|integer',
+        'isexamen'    => 'integer',
     ];
     }
 }

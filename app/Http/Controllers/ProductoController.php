@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SaveBookRequest;
-use App\Models\Book;
+use App\Http\Requests\SaveProductoRequest;
+use App\Models\Producto;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class BookController extends Controller
+class ProductoController extends Controller
 {
 
        //
     public function index(): JsonResponse
     {
-        $books = Book::latest()->get();
+        $productos = Producto::latest()->get();
 
-        return response()->json($books, Response::HTTP_OK);
+        return response()->json($productos, Response::HTTP_OK);
 
     }
     //
-public function store(SaveBookRequest $request): JsonResponse
+public function store(SaveProductoRequest $request): JsonResponse
 {
     $data = $request->validated();
 
@@ -30,9 +30,19 @@ public function store(SaveBookRequest $request): JsonResponse
         $data['image'] = $this->saveBase64Image($data['image']);
     }
 
-    $book = Book::create($data);
+    $producto = Producto::create($data);
 
-    return response()->json($book, Response::HTTP_CREATED);
+    return response()->json($producto, Response::HTTP_CREATED);
+}
+
+
+public function storeMultiple(Request $request)
+{
+    foreach ($request->productos as $producto) {
+        Producto::create($producto);
+    }
+
+    return response()->json(['message' => 'Productos registrados'], 201);
 }
 
 /**
@@ -59,7 +69,7 @@ private function saveBase64Image(string $base64Image): string
     $imageName = Str::random(20) . '.' . $imageType;
 
 // Ruta física del archivo en el sistema de archivos
-    $directory = public_path('images/productos'); // => C:\...\trabajo-api\public\images\books
+    $directory = public_path('images/Productos'); // => C:\...\trabajo-api\public\images\Productos
     if (!file_exists($directory)) {
         mkdir($directory, 0755, true); // Crea la carpeta si no existe
     }
@@ -68,7 +78,7 @@ private function saveBase64Image(string $base64Image): string
     file_put_contents($filePath, $imageData);
 
     // Guardar en carpeta public/assets/image
-    $path = 'https://moving-firefly-neatly.ngrok-free.app/images/productos/' . $imageName;
+    $path = 'http://localhost:8000/images/Productos/' . $imageName;
 
     return $path; // ruta relativa para guardar en BD (puedes ajustar si quieres URL completa)
 }
@@ -76,16 +86,16 @@ private function saveBase64Image(string $base64Image): string
     //
     public function show(string $id): JsonResponse
     {
-        $book = Book::findOrFail($id);
+        $producto = Producto::findOrFail($id);
 
-        return response()->json($book, Response::HTTP_OK);
+        return response()->json($producto, Response::HTTP_OK);
 
     }
     //
-    public function update(SaveBookRequest $request, string $id): JsonResponse
+    public function update(SaveProductoRequest $request, string $id): JsonResponse
     {
 
-        $book = Book::findOrFail($id);
+        $producto = Producto::findOrFail($id);
 
          $data = $request->validated();
 
@@ -93,18 +103,18 @@ private function saveBase64Image(string $base64Image): string
         $data['image'] = $this->saveBase64Image($data['image']);
     }
 
-     $book->update($data);
+     $producto->update($data);
 
 
-    return response()->json($book, Response::HTTP_OK);
+    return response()->json($producto, Response::HTTP_OK);
     }
      //
     public function destroy(string $id): JsonResponse
     {
 
-        $book = Book::findOrFail($id);
+        $producto = Producto::findOrFail($id);
 
-        $book->delete();
+        $producto->delete();
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
 

@@ -11,7 +11,7 @@ class SaveTemaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,12 @@ class SaveTemaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nombre' => 'required|string|unique:temas,nombre',
+            'cursoid' => 'required',
+            'created_at' => 'required',
+            'updated_at' => 'required',
+            'is_deleted' => 'required',
+            'is_actived' => 'required'
         ];
     }
 }

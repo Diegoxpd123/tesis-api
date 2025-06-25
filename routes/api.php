@@ -14,17 +14,28 @@ use App\Http\Controllers\CursoController;
 use App\Http\Controllers\TemaController;
 use App\Http\Controllers\EvaluacionController;
 use App\Http\Controllers\SeccionController;
+use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\ResultadoPreguntaController;
 use App\Http\Controllers\PreguntaController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\DocenteSesionController;
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\WhatsappController;
+use App\Http\Controllers\ImagenProductoController;
+
 
 Route::apiResource('clientes',ClienteController::class);
 Route::apiResource('books',BookController::class);
 Route::apiResource('orders',OrderController::class);
 Route::apiResource('details',DetailController::class);
+Route::apiResource('productos',ProductoController::class);
+Route::post('/whatsapp/enviar-boleta-falsa', [WhatsappController::class, 'enviarBoletaFalsa']);
 
+Route::get('/imagenes-productos', [ImagenProductoController::class, 'listar']);
+
+
+Route::apiResource('empleados', EmpleadoController::class);
 Route::apiResource('alumnos',AlumnoController::class);
 Route::apiResource('instituciones',InstitucionController::class);
 Route::apiResource('cursos',CursoController::class);

@@ -11,5 +11,5 @@ class Evaluacion extends Model
      use HasFactory;
 
         protected $table = 'evaluaciones';
-        protected $fillable = ['nombre','temaid','institucionid','created_at','updated_at','is_deleted','is_actived'];
+        protected $fillable = ['nombre','temaid','institucionid','created_at','updated_at','is_deleted','is_actived','fechainicio','fechafin','grado'];
 }

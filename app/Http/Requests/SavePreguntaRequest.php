@@ -11,7 +11,7 @@ class SavePreguntaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +21,22 @@ class SavePreguntaRequest extends FormRequest
      */
     public function rules(): array
     {
+
+
+
         return [
+            'descripcion' => 'required|string',
+            'evaluacionid' => 'required',
+            'imagen' => 'required|string',
+            'respuesta' => 'required|string',
+            'opcion1' => 'required|string',
+            'opcion2' => 'required|string',
+            'opcion3' => 'required|string',
+            'opcion4' => 'required|string',
+            'created_at' => 'required',
+            'updated_at' => 'required',
+            'is_deleted' => 'required',
+            'is_actived' => 'required'
             //
         ];
     }

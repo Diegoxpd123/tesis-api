@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveEvaluacionRequest extends FormRequest
+class SaveEmpleadoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,17 +22,11 @@ class SaveEvaluacionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => 'required|string',
-            'temaid' => 'required',
-            'institucionid' => 'required',
-            'fechainicio' => 'required',
-            'fechafin' => 'required',
-            'grado' => 'required',
-            'created_at' => 'required',
-            'updated_at' => 'required',
-            'is_deleted' => 'required',
-            'is_actived' => 'required',
-            //
+            'dni' => 'required|string',
+            'name' => 'required|string',
+            'cargo' => 'required|string',
+            'created_at' => 'required|string',
+            'updated_at' => 'required|string'
         ];
     }
 }

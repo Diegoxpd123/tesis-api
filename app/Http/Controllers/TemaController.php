@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+use Illuminate\Support\Facades\Log;
 
 class TemaController extends Controller
 {
@@ -23,6 +24,8 @@ class TemaController extends Controller
     public function store(SaveTemaRequest $request): JsonResponse
     {
 
+
+  Log::info('Datos recibidos:', $request->all());
         $tema = Tema::create($request->validated());
 
         return response()->json($tema, Response::HTTP_CREATED);
@@ -36,6 +39,7 @@ class TemaController extends Controller
         return response()->json($tema, Response::HTTP_OK);
 
     }
+
     //
     public function update(SaveTemaRequest $request, string $id): JsonResponse
     {

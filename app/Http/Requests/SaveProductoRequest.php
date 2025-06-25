@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveEvaluacionRequest extends FormRequest
+class SaveProductoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,18 +21,19 @@ class SaveEvaluacionRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
-            'nombre' => 'required|string',
-            'temaid' => 'required',
-            'institucionid' => 'required',
-            'fechainicio' => 'required',
-            'fechafin' => 'required',
-            'grado' => 'required',
-            'created_at' => 'required',
-            'updated_at' => 'required',
+            'talla' => 'required',
+            'color' => 'required|string',
+            'nombre' => 'required',
+            'descripcion' => 'required',
+            'stock' => 'required|string',
+            'price' => 'required',
+            'image' => 'required',
             'is_deleted' => 'required',
             'is_actived' => 'required',
-            //
+            'created_at' => 'required',
+            'updated_at' => 'required'
         ];
     }
 }
