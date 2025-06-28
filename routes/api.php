@@ -34,6 +34,7 @@ Route::post('/whatsapp/enviar-boleta-falsa', [WhatsappController::class, 'enviar
 
 Route::get('/imagenes-productos', [ImagenProductoController::class, 'listar']);
 
+Route::post('/resultados-curso', [AlumnoController::class, 'getResultadosCurso']);
 
 Route::apiResource('empleados', EmpleadoController::class);
 Route::apiResource('alumnos',AlumnoController::class);
