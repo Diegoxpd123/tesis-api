@@ -35,9 +35,13 @@ Route::post('/whatsapp/enviar-boleta-falsa', [WhatsappController::class, 'enviar
 Route::get('/imagenes-productos', [ImagenProductoController::class, 'listar']);
 
 Route::post('/resultados-curso', [AlumnoController::class, 'getResultadosCurso']);
+Route::post('/reporte-detallado', [AlumnoController::class, 'getReporteDetallado']);
+Route::post('/reporte-uso-por-curso', [AlumnoController::class, 'getReporteUsoPorCurso']);
 
 Route::apiResource('empleados', EmpleadoController::class);
 Route::apiResource('alumnos',AlumnoController::class);
+Route::get('/alumnos-con-usuario', [AlumnoController::class, 'getAlumnosConUsuario']);
+Route::post('/alumnos/create', [AlumnoController::class, 'createAlumno']);
 Route::apiResource('instituciones',InstitucionController::class);
 Route::apiResource('cursos',CursoController::class);
 Route::apiResource('temas',TemaController::class);
@@ -46,7 +50,16 @@ Route::apiResource('secciones',SeccionController::class);
 Route::apiResource('resultados',ResultadoPreguntaController::class);
 Route::apiResource('preguntas',PreguntaController::class);
 Route::apiResource('usuarios',UsuarioController::class);
+Route::post('/usuarios/create', [UsuarioController::class, 'createUsuario']);
+Route::post('/usuarios/login', [UsuarioController::class, 'login']);
+Route::post('/usuarios/verify', [UsuarioController::class, 'verifyUser']);
+Route::post('/usuarios/verify-dni', [UsuarioController::class, 'verifyDNI']);
+Route::post('/usuarios/change-password', [UsuarioController::class, 'changePassword']);
 Route::apiResource('docentes',DocenteController::class);
 Route::apiResource('docentesesions',DocenteSesionController::class);
+
+// Rutas específicas para docentes
+Route::post('/docentes/secciones', [DocenteController::class, 'getSeccionesDocente']);
+Route::post('/docentes/estudiantes', [DocenteController::class, 'getEstudiantesPorDocente']);
 
 Route::post('/chatgpt', [ChatGptController::class, 'chat']);

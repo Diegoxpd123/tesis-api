@@ -11,5 +11,5 @@ class Alumno extends Model
      use HasFactory;
 
         protected $table = 'alumnos';
-        protected $fillable = ['nombre','numero','correo','seccionid','institucionid','created_at','updated_at','is_deleted','is_actived'];
+        protected $fillable = ['nombre','numero','correo','seccionid','institucionid','grado','created_at','updated_at','is_deleted','is_actived'];
 }

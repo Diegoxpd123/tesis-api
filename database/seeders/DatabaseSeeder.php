@@ -19,5 +19,12 @@ class DatabaseSeeder extends Seeder
 
         Cliente::factory(5)->create();
         Book::factory(8)->create();
+
+        // Seeders para instituciones, cursos y secciones
+        $this->call([
+            InstitucionSeeder::class,
+            CursoSeeder::class,
+            SeccionSeeder::class,
+        ]);
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Usuario;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 
 class UsuarioController extends Controller
@@ -27,6 +28,74 @@ class UsuarioController extends Controller
 
         return response()->json($usuario, Response::HTTP_CREATED);
 
+    }
+
+    /**
+     * Crear usuario con contraseña encriptada
+     */
+    public function createUsuario(Request $request): JsonResponse
+    {
+        $request->validate([
+            'usuario' => 'required|string|max:255|unique:usuarios,usuario',
+            'password' => 'required|string|min:6',
+            'tipousuarioid' => 'required|integer',
+            'aludocenid' => 'required|integer',
+            'grado' => 'required|string',
+            'is_actived' => 'integer',
+            'is_deleted' => 'integer'
+        ]);
+
+        $usuario = Usuario::create([
+            'usuario' => $request->usuario,
+            'contra' => bcrypt($request->password), // Encriptar contraseña
+            'tipousuarioid' => $request->tipousuarioid,
+            'aludocenid' => $request->aludocenid,
+            'grado' => $request->grado,
+            'is_actived' => $request->is_actived ?? 1,
+            'is_deleted' => $request->is_deleted ?? 0
+        ]);
+
+        return response()->json([
+            'message' => 'Usuario creado exitosamente',
+            'usuario' => $usuario
+        ], Response::HTTP_CREATED);
+    }
+
+    /**
+     * Verificar login con contraseña encriptada
+     */
+    public function login(Request $request): JsonResponse
+    {
+        $request->validate([
+            'usuario' => 'required|string',
+            'password' => 'required|string'
+        ]);
+
+        $usuario = Usuario::where('usuario', $request->usuario)
+            ->where('is_actived', 1)
+            ->where('is_deleted', 0)
+            ->first();
+
+        if ($usuario && Hash::check($request->password, $usuario->contra)) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Login exitoso',
+                'usuario' => [
+                    'id' => $usuario->id,
+                    'usuario' => $usuario->usuario,
+                    'tipousuarioid' => $usuario->tipousuarioid,
+                    'aludocenid' => $usuario->aludocenid,
+                    'grado' => $usuario->grado,
+                    'is_actived' => $usuario->is_actived,
+                    'is_deleted' => $usuario->is_deleted
+                ]
+            ], Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Credenciales incorrectas'
+        ], Response::HTTP_UNAUTHORIZED);
     }
     //
     public function show(string $id): JsonResponse
@@ -59,6 +128,111 @@ class UsuarioController extends Controller
 
     }
 
+    /**
+     * Verificar si el usuario existe para recuperación de contraseña
+     */
+    public function verifyUser(Request $request): JsonResponse
+    {
+        $request->validate([
+            'usuario' => 'required|string'
+        ]);
 
+        $usuario = Usuario::where('usuario', $request->usuario)
+            ->where('is_actived', 1)
+            ->where('is_deleted', 0)
+            ->first();
 
+        if ($usuario) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Usuario encontrado',
+                'usuario' => [
+                    'id' => $usuario->id,
+                    'usuario' => $usuario->usuario,
+                    'tipousuarioid' => $usuario->tipousuarioid,
+                    'aludocenid' => $usuario->aludocenid,
+                    'grado' => $usuario->grado
+                ]
+            ], Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Usuario no encontrado'
+        ], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * Verificar los últimos 4 dígitos del DNI
+     */
+    public function verifyDNI(Request $request): JsonResponse
+    {
+        $request->validate([
+            'user_id' => 'required|integer',
+            'dni' => 'required|string|size:4'
+        ]);
+
+        $usuario = Usuario::find($request->user_id);
+
+        if (!$usuario) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuario no encontrado'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        // Buscar el alumno asociado al usuario
+        $alumno = \App\Models\Alumno::where('id', $usuario->aludocenid)->first();
+
+        if (!$alumno) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró información del alumno'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        // Verificar los últimos 4 dígitos del DNI
+        $lastFourDigits = substr($alumno->numero, -4);
+
+        if ($lastFourDigits === $request->dni) {
+            return response()->json([
+                'success' => true,
+                'message' => 'DNI verificado correctamente'
+            ], Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Los últimos 4 dígitos del DNI no coinciden'
+        ], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * Cambiar la contraseña del usuario
+     */
+    public function changePassword(Request $request): JsonResponse
+    {
+        $request->validate([
+            'user_id' => 'required|integer',
+            'new_password' => 'required|string|min:6'
+        ]);
+
+        $usuario = Usuario::find($request->user_id);
+
+        if (!$usuario) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuario no encontrado'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $usuario->update([
+            'contra' => bcrypt($request->new_password)
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Contraseña cambiada exitosamente'
+        ], Response::HTTP_OK);
+    }
 }
