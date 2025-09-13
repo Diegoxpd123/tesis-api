@@ -40,7 +40,7 @@ class UsuarioController extends Controller
             'password' => 'required|string|min:6',
             'tipousuarioid' => 'required|integer',
             'aludocenid' => 'required|integer',
-            'grado' => 'required|string',
+            'grado' => 'required|string|in:5,6',
             'is_actived' => 'integer',
             'is_deleted' => 'integer'
         ]);

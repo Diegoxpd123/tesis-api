@@ -29,7 +29,7 @@ class AlumnoController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'numero' => 'required|string|max:20',
-            'grado' => 'required|integer',
+            'grado' => 'required|integer|in:5,6',
             'institucionid' => 'required|integer',
             'seccionid' => 'required|integer',
             'is_actived' => 'integer',

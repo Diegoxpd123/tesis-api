@@ -27,7 +27,7 @@ class SaveEvaluacionRequest extends FormRequest
             'institucionid' => 'required',
             'fechainicio' => 'required',
             'fechafin' => 'required',
-            'grado' => 'required',
+            'grado' => 'required|integer|in:5,6',
             'created_at' => 'required',
             'updated_at' => 'required',
             'is_deleted' => 'required',
