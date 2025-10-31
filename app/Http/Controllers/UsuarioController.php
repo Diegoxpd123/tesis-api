@@ -37,6 +37,7 @@ class UsuarioController extends Controller
     {
         $request->validate([
             'usuario' => 'required|string|max:255|unique:usuarios,usuario',
+            'numero' => 'nullable|string|max:20',
             'password' => 'required|string|min:6',
             'tipousuarioid' => 'required|integer',
             'aludocenid' => 'required|integer',
@@ -47,6 +48,7 @@ class UsuarioController extends Controller
 
         $usuario = Usuario::create([
             'usuario' => $request->usuario,
+            'numero' => $request->numero,
             'contra' => bcrypt($request->password), // Encriptar contraseña
             'tipousuarioid' => $request->tipousuarioid,
             'aludocenid' => $request->aludocenid,
@@ -181,18 +183,16 @@ class UsuarioController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
-        // Buscar el alumno asociado al usuario
-        $alumno = \App\Models\Alumno::where('id', $usuario->aludocenid)->first();
-
-        if (!$alumno) {
+        // Verificar que el usuario tenga un número de documento
+        if (!$usuario->numero) {
             return response()->json([
                 'success' => false,
-                'message' => 'No se encontró información del alumno'
+                'message' => 'No se encontró información del documento'
             ], Response::HTTP_NOT_FOUND);
         }
 
         // Verificar los últimos 4 dígitos del DNI
-        $lastFourDigits = substr($alumno->numero, -4);
+        $lastFourDigits = substr($usuario->numero, -4);
 
         if ($lastFourDigits === $request->dni) {
             return response()->json([
